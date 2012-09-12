@@ -10,25 +10,28 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <list>
-#include <cassert>
+#include "hash.h"
 using namespace std;
 
+bool addToDictionary(string Dictionary);
 int main(int argc, char** argv) {
-    string InputFile, OutputFile;
+    string Dictionary, SpellCheck, OutputFile;
     
-    char letter;
-    string word="";
+    cout<<"Enter path of dictionary: ";
+    cin>>Dictionary;
+    addToDictionary(Dictionary);
+    cout<<"Dictionary created.";
     
-    cout<<"Enter path of input file: ";
-    cin>>InputFile;
+    cout<<"Enter path of file to spell check:";
+    cin>>SpellCheck;
+            
     cout<<"Enter path of output file: ";
     cin>>OutputFile;
     
-    ifstream input;
+    ifstream scfile;
     ofstream output;
     
-    input.open(InputFile.c_str());
+    scfile.open(SpellCheck.c_str());
     output.open(OutputFile.c_str());
     
     while (!input.eof())
@@ -36,12 +39,32 @@ int main(int argc, char** argv) {
         input.get(letter);
         if (letter == '\n' || input.eof() )
         {
-            hashTable::insert(word);
+            word="";
+        }else  word+=letter;
+    }
+    
+    scfile.close();
+    output.close();
+    return 0;
+}
+
+bool addToDictionary(string Dictionary) {
+    ifstream input;
+    char letter;
+    hashTable(200) hasher;
+    string word="";
+    input.open(Dictionary.c_str());
+    
+    while (!input.eof())
+    {
+        input.get(letter);
+        if (letter == '\n' || input.eof() )
+        {
+            hasher.insert(word);
             word="";
         }else  word+=letter;
     }
     input.close();
-    output.close();
-    return 0;
+    return true;
 }
 
