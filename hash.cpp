@@ -4,18 +4,18 @@
  * 
  * Created on September 10, 2012, 12:23 PM
  */
-
 #include "hash.h"
 using namespace std;
 
-    hashTable::hashTable(int size = 0) {
+    hashTable::hashTable(int size) {
+        size = hashTable::getPrime(200);
         data.resize(size);
         for(int i = 0; i< size; i++)
             data[i].isOccupied = false;
         
     }
     
-    int hashTable::insert(const std::string &key, void *pv = NULL) {
+    int hashTable::insert(const std::string &key, void *pv) {
         if (this->capacity / this->filled < 2) rehash();
         int number = hash(key);
         while(data[number].isOccupied==true){
@@ -33,7 +33,7 @@ using namespace std;
     
     bool hashTable::contains(const std::string &key){
         int number = hash(key);
-        while(data[number]->isOccupied == true){
+        while(data[number].isOccupied == true){
             if(data[number].key == key) 
                 return true;
             else number++;
@@ -41,18 +41,18 @@ using namespace std;
         return false;
     }
     
-    void hashTable::*getPointer(const std::string &key, bool *b = NULL){
+    /*void hashTable::*getPointer(const std::string &key, bool *b = NULL){
         
     }
     
     int hashTable::setPointer(const std::string &key, void *pv){
 
-    }
+    }*/
     
     bool hashTable::remove(const std::string &key){
         int number = hash(key);
-        data[number]->isDeleted=true;
-        data[number]->isOccupied=false;
+        data[number].isDeleted=true;
+        data[number].isOccupied=false;
     }
     
     int hashTable::hash(const std::string &key){
@@ -63,18 +63,20 @@ using namespace std;
         hashVal %= this->capacity;
         
         if(hashVal < 0)
-            hashVal += capacity;
+            hashVal += this->capacity;
         
         return hashVal;
     }
         
     
-    int hashTable::findPos(const std::string &key);
+    int hashTable::findPos(const std::string &key){
+        
+    }
     
     bool hashTable::rehash(){
         std::vector<hashItem> oldData = data;
         
-        int newSize = getPrime(capacity*2);
+        int newSize = getPrime(this->capacity*2);
         data.resize(newSize);
         this->capacity = newSize;
         
@@ -88,4 +90,6 @@ using namespace std;
         return true;
     }
     
-    static unsigned int hashTable::getPrime(int size);
+    int hashTable::getPrime(int size){
+        return 500;
+    }

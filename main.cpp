@@ -15,7 +15,6 @@ using namespace std;
 
 int main(int argc, char** argv) {
     string Dictionary, SpellCheck, OutputFile;
-    
     cout<<"Enter path of dictionary: ";
     cin>>Dictionary;
     
@@ -54,7 +53,7 @@ int main(int argc, char** argv) {
     while (!scfile.eof())
     {
         scfile.get(letter);
-        if (letter == '\n' || letter==' ' input.eof() )
+        if (letter == '\n' || letter==' ' || input.eof() )
         {
             if(!hasher.contains(checkit))
                 cout<<"Not in Dictionary. \n";
