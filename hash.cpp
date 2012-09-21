@@ -6,61 +6,86 @@
  */
 
 #include "hash.h"
-    hashTable(int size = 0) {
+using namespace std;
+
+    hashTable::hashTable(int size = 0) {
         data.resize(size);
+        for(int i = 0; i< size; i++)
+            data[i].isOccupied = false;
+        
     }
     
     int hashTable::insert(const std::string &key, void *pv = NULL) {
-        //check size of data. if not enough, call hashTable(200)
-        int number;
-        number = hash(key);
-        data[number]={key, isOccupied=1, isDeleted=0};
+        if (this->capacity / this->filled < 2) rehash();
+        int number = hash(key);
+        while(data[number].isOccupied==true){
+            if(data[number].isDeleted==false)
+                number++;
+            else
+                break;
+        }
+        data[number].key = key;
+        data[number].isOccupied = true;
+        data[number].isDeleted = false;
         
+        this->filled ++;
+    }
+    
+    bool hashTable::contains(const std::string &key){
+        int number = hash(key);
+        while(data[number]->isOccupied == true){
+            if(data[number].key == key) 
+                return true;
+            else number++;
+        }
+        return false;
+    }
+    
+    void hashTable::*getPointer(const std::string &key, bool *b = NULL){
         
     }
     
-    bool contains(const std::string &key){
-        number = hash(key);
-        data[number]->isOccupied and !Deleted;
-        
+    int hashTable::setPointer(const std::string &key, void *pv){
+
     }
     
-    void *getPointer(const std::string &key, bool *b = NULL){
-        
+    bool hashTable::remove(const std::string &key){
+        int number = hash(key);
+        data[number]->isDeleted=true;
+        data[number]->isOccupied=false;
     }
     
-    int setPointer(const std::string &key, void *pv){
+    int hashTable::hash(const std::string &key){
+        int hashVal = 0;
         
-    }
-    
-    bool remove(const std::string &key){
+        for( int i = 0; i< key.length(); i++)
+            hashVal = 37*hashVal + key[i];
+        hashVal %= this->capacity;
         
-    }
-    
-private:
-    class hashItem {
-    
-    public:
-        std::string key;
-        bool isOccupied;
-        bool isDeleted;
-        void *pv;
-    };
-    
-    int capacity;
-    int filled;
-    
-    std::vector<hashItem> data;
-    
-    int hash(const std::string &key){
-        int number = key[1]+key[2];
-        return number;
+        if(hashVal < 0)
+            hashVal += capacity;
+        
+        return hashVal;
     }
         
     
-    int findPos(const std::string &key);
+    int hashTable::findPos(const std::string &key);
     
-    bool rehash();
+    bool hashTable::rehash(){
+        std::vector<hashItem> oldData = data;
+        
+        int newSize = getPrime(capacity*2);
+        data.resize(newSize);
+        this->capacity = newSize;
+        
+        for(int i = 0; i< newSize; i++)
+            data[i].isOccupied = false;
+        
+        for(int j = 0; j<oldData.size(); j++)
+            if((oldData[j].isOccupied == true)+(oldData[j].isDeleted = false))
+                insert(oldData[j].key);
+        
+        return true;
+    }
     
-    static unsigned int getPrime(int size);
-};
+    static unsigned int hashTable::getPrime(int size);

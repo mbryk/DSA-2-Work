@@ -13,13 +13,29 @@
 #include "hash.h"
 using namespace std;
 
-bool addToDictionary(string Dictionary);
 int main(int argc, char** argv) {
     string Dictionary, SpellCheck, OutputFile;
     
     cout<<"Enter path of dictionary: ";
     cin>>Dictionary;
-    addToDictionary(Dictionary);
+    
+    ifstream input;
+    input.open(Dictionary.c_str());
+    
+    char letter;
+    hashTable hasher;
+    string word="";
+    
+    while (!input.eof())
+    {
+        input.get(letter);
+        if (letter == '\n' || input.eof() )
+        {
+            hasher.insert(word);
+            word="";
+        }else  word+=letter;
+    }
+    input.close();    
     cout<<"Dictionary created.";
     
     cout<<"Enter path of file to spell check:";
@@ -34,37 +50,19 @@ int main(int argc, char** argv) {
     scfile.open(SpellCheck.c_str());
     output.open(OutputFile.c_str());
     
-    while (!input.eof())
+    string checkit="";
+    while (!scfile.eof())
     {
-        input.get(letter);
-        if (letter == '\n' || input.eof() )
+        scfile.get(letter);
+        if (letter == '\n' || letter==' ' input.eof() )
         {
-            word="";
-        }else  word+=letter;
+            if(!hasher.contains(checkit))
+                cout<<"Not in Dictionary. \n";
+            checkit="";
+        }else  checkit+=letter;
     }
     
     scfile.close();
     output.close();
     return 0;
 }
-
-bool addToDictionary(string Dictionary) {
-    ifstream input;
-    char letter;
-    hashTable(200) hasher;
-    string word="";
-    input.open(Dictionary.c_str());
-    
-    while (!input.eof())
-    {
-        input.get(letter);
-        if (letter == '\n' || input.eof() )
-        {
-            hasher.insert(word);
-            word="";
-        }else  word+=letter;
-    }
-    input.close();
-    return true;
-}
-
