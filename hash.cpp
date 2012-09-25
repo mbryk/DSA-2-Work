@@ -10,6 +10,7 @@ using namespace std;
 
     hashTable::hashTable(int size) {
         capacity = hashTable::getPrime(size);
+        filled = 1;
         try{
             data.resize(capacity);
         }
@@ -20,8 +21,9 @@ using namespace std;
     }
     
     int hashTable::insert(const std::string &key, void *pv) {
-        if (capacity / filled < 2) 
+        if((capacity/filled)<2)
             if(!rehash()) return 2;
+        
         int number = hash(key);
         
         while(data.at(number).isOccupied==true){
@@ -46,14 +48,13 @@ using namespace std;
     bool hashTable::contains(const std::string &key){
         //if(findPos(capacity==...))
         int number = hash(key);
-        cout<<number<<key<<endl;
+        //cout<<number<<key<<endl;
         while(data.at(number).isOccupied == true){
             if(data.at(number).key == key) 
                 return true;
             else number++;
         }
         return false;
-        //return true;
     }
     
     /*void hashTable::*getPointer(const std::string &key, bool *b = NULL){
@@ -91,7 +92,7 @@ using namespace std;
     bool hashTable::rehash(){
         std::vector<hashItem> oldData = data;
         
-        int capacity = getPrime(capacity*2);
+        capacity = getPrime(capacity*2);
         try{
             data.resize(capacity);
         }
@@ -110,9 +111,8 @@ using namespace std;
     
     int hashTable::getPrime(int size){
         int primes[] = {19997,40009,80021,160049,320101,640219,1301221,2783999};
-        
         for(int i=0; i < sizeof(primes); i++) {
-            if(size>primes[i]) return primes[i];
+            if(size<primes[i]) return primes[i];
         }
         return 0;
     }

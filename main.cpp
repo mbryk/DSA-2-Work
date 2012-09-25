@@ -62,28 +62,36 @@ int spellCheck(ifstream scfile, ofstream output, hashTable & hasher){
 }
 */
 int main(int argc, char** argv) {
-    hashTable hasher(200);
+    hashTable hasher(15000);
   
     string Dictionary, SpellCheck, OutputFile;
     cout<<"Enter path of dictionary: ";
     cin>>Dictionary;
     
     ifstream input;
+    ofstream deb;
+    
     input.open(Dictionary.c_str());
+    deb.open("debug.txt");
     
     clock_t t1 = clock();
     ////////////////////////////////////////////////////////////////////////
         char c;
     string word="";
     bool valid = true;
+    ////
+    int key;
+    ///
     while (!input.eof())
     {
         input.get(c);
         c = tolower(c);
         if (c == '\n' || input.eof() )
         {
-            if(valid==false)
-                hasher.insert(word);
+            if(valid==true){
+                key = hasher.insert(word);
+                deb<<key<<word<<endl;
+            }
             word="";
             
             valid = true;
@@ -92,6 +100,8 @@ int main(int argc, char** argv) {
             word+=c;
         }
     }
+    
+    deb.close();
     input.close();
     ////////////////////////////////////////////////////////////////////
     //loadDictionary(input, hasher);
@@ -119,17 +129,18 @@ int main(int argc, char** argv) {
     {
         scfile.get(c);
         c = tolower(c);
-        if ( (!valid_char(c)) || c==' ' || scfile.eof() )
+        if ( (!valid_char(c)) || scfile.eof() )
         {
             if(c == '\n')
-                line++;
-            else{
+                line++;            
+            if(checkit.size()>0){
                 if(checkit.size()>20)
-                    cout<<"Long Word on line"<<endl;
+                    cout<<"Long Word on line "<<line<<endl;
                 else if(!hasher.contains(checkit))
-                    cout<<"Unknown Word on line."<<endl;
+                    cout<<"Unknown Word on line "<<line<<endl;
+            
+                checkit="";
             }
-            checkit="";
         }else  checkit+=c;
     }
     
