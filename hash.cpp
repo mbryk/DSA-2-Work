@@ -8,30 +8,37 @@
 using namespace std;
 
     hashTable::hashTable(int size) {
-        size = hashTable::getPrime(200);
-        data.resize(size);
+        capacity = hashTable::getPrime(200);
+        try{
+            data.resize(capacity);
+        }
+        catch (bad_alloc const&) {
+            return false;
+        }
         for(int i = 0; i< size; i++)
             data[i].isOccupied = false;
-        
     }
     
     int hashTable::insert(const std::string &key, void *pv) {
-        if (this->capacity / this->filled < 2) rehash();
+        if (capacity / filled < 2) rehash();
         int number = hash(key);
+        
         while(data[number].isOccupied==true){
             if(data[number].isDeleted==false)
                 number++;
-            else
+                            //if pos>capactiy pos-=capacity
+            else //dont forget to check if key==this key
                 break;
         }
         data[number].key = key;
         data[number].isOccupied = true;
         data[number].isDeleted = false;
         
-        this->filled ++;
+        if(++filled) return 1;
     }
     
     bool hashTable::contains(const std::string &key){
+        //if(findPos(capacity==...))
         int number = hash(key);
         while(data[number].isOccupied == true){
             if(data[number].key == key) 
@@ -60,10 +67,10 @@ using namespace std;
         
         for( int i = 0; i< key.length(); i++)
             hashVal = 37*hashVal + key[i];
-        hashVal %= this->capacity;
+        hashVal %= capacity;
         
         if(hashVal < 0)
-            hashVal += this->capacity;
+            hashVal += capacity;
         
         return hashVal;
     }
@@ -76,15 +83,18 @@ using namespace std;
     bool hashTable::rehash(){
         std::vector<hashItem> oldData = data;
         
-        int newSize = getPrime(this->capacity*2);
-        data.resize(newSize);
-        this->capacity = newSize;
-        
-        for(int i = 0; i< newSize; i++)
+        int capacity = getPrime(capacity*2);
+        try{
+            data.resize(newSize);
+        }
+        catch (bad_alloc const&) {
+            return false;
+        }
+        for(int i = 0; i< capacity; i++)
             data[i].isOccupied = false;
         
         for(int j = 0; j<oldData.size(); j++)
-            if((oldData[j].isOccupied == true)+(oldData[j].isDeleted = false))
+            if((oldData[j].isOccupied == true)&&(oldData[j].isDeleted = false))
                 insert(oldData[j].key);
         
         return true;
