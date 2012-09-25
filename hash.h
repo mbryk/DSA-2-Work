@@ -41,7 +41,7 @@ class hashTable {
   // Returns true on success,
   // false if the specified key is not in the hash table.
   bool remove(const std::string &key);
-
+  
  private:
 
   // Each item in the hash table contains:
@@ -66,9 +66,8 @@ class hashTable {
 
   // The hash function.
   int hash(const std::string &key);
-
+  
   // Search for an item with the specified key.
-  // Return the position if found, -1 otherwise.
   int findPos(const std::string &key);
 
   // The rehash function; makes the hash table bigger.

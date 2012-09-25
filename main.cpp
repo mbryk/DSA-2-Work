@@ -30,20 +30,20 @@ int loadDictionary(ifstream input, hashTable & hasher) {
         c = tolower(c);
         if (c == '\n' || input.eof() )
         {
-            if(valid==false)
+            if(valid==true)
                 hasher.insert(word);
             word="";
             
             valid = true;
         }else  {
-            valid = valid_char(c, true);
+            valid = valid_char(c);
             word+=c;
         }
     }
     input.close();
 }
 int spellCheck(ifstream scfile, ofstream output, hashTable & hasher){
-    char c;
+    char c; int line = 1;
     string checkit="";
     while (!scfile.eof())
     {
@@ -51,10 +51,19 @@ int spellCheck(ifstream scfile, ofstream output, hashTable & hasher){
         c = tolower(c);
         if ( (!valid_char(c)) || scfile.eof() )
         {
-            if(!hasher.contains(checkit))
-                cout<<"Not in Dictionary. \n";
+            if( checkit.size()>0 && checkit.size()<21){
+                if(!hasher.contains(checkit))
+                    output<<"Unknown Word at line "<<line<<": "<<checkit<<endl;            
+            }
+            if(c == '\n')
+                line++;
             checkit="";
-        }else  checkit+=c;
+            
+        } else {
+            if(checkit.size()==20) 
+                output<<"Long Word at line "<<line<<", starts: "<<checkit<<endl;
+            checkit+=c;
+        }
     }
     
     scfile.close();
@@ -65,23 +74,17 @@ int main(int argc, char** argv) {
     hashTable hasher(15000);
   
     string Dictionary, SpellCheck, OutputFile;
-    cout<<"Enter path of dictionary: ";
+    cout<<"Enter name of dictionary: ";
     cin>>Dictionary;
     
     ifstream input;
-    ofstream deb;
-    
     input.open(Dictionary.c_str());
-    deb.open("debug.txt");
     
     clock_t t1 = clock();
     ////////////////////////////////////////////////////////////////////////
         char c;
     string word="";
     bool valid = true;
-    ////
-    int key;
-    ///
     while (!input.eof())
     {
         input.get(c);
@@ -89,8 +92,7 @@ int main(int argc, char** argv) {
         if (c == '\n' || input.eof() )
         {
             if(valid==true){
-                key = hasher.insert(word);
-                deb<<key<<word<<endl;
+                hasher.insert(word);
             }
             word="";
             
@@ -101,19 +103,17 @@ int main(int argc, char** argv) {
         }
     }
     
-    deb.close();
     input.close();
     ////////////////////////////////////////////////////////////////////
     //loadDictionary(input, hasher);
     clock_t t2 = clock();
     double timeDiff = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    cout << "Dictionary Read. CPU time was " << timeDiff << " seconds." << endl;    
-
+    cout << "Total time (in seconds) to load dictionary: " << timeDiff << endl;    
     
-    cout<<"Enter path of file to spell check:";
+    cout<<"Enter name of input file: ";
     cin>>SpellCheck;
             
-    cout<<"Enter path of output file: ";
+    cout<<"Enter name of output file: ";
     cin>>OutputFile;
     
     ifstream scfile;
@@ -124,24 +124,26 @@ int main(int argc, char** argv) {
     clock_t t3 = clock();
     ////////////////////////////////////////////////////////////////////////////
     string checkit="";
-    int line = 0;
+    int line = 1;
     while (!scfile.eof())
     {
         scfile.get(c);
         c = tolower(c);
         if ( (!valid_char(c)) || scfile.eof() )
-        {
-            if(c == '\n')
-                line++;            
-            if(checkit.size()>0){
-                if(checkit.size()>20)
-                    cout<<"Long Word on line "<<line<<endl;
-                else if(!hasher.contains(checkit))
-                    cout<<"Unknown Word on line "<<line<<endl;
-            
-                checkit="";
+        {           
+            if( checkit.size()>0 && checkit.size()<21){
+                if(!hasher.contains(checkit))
+                    output<<"Unknown Word at line "<<line<<": "<<checkit<<endl;            
             }
-        }else  checkit+=c;
+            if(c == '\n')
+                line++;
+            checkit="";
+            
+        } else {
+            if(checkit.size()==20) 
+                output<<"Long Word at line "<<line<<", starts: "<<checkit<<endl;
+            checkit+=c;
+        }
     }
     
     scfile.close();
@@ -150,7 +152,7 @@ int main(int argc, char** argv) {
     //spellCheck(scfile, output, hasher);
     clock_t t4 = clock();
     double timeDiff2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC;
-    cout << "Document Checked. CPU time was " << timeDiff2 << " seconds." << endl;  
+    cout << "Total time (in seconds) to check document: " << timeDiff2 << endl;  
     
     return 0;
 }

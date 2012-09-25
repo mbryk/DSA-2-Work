@@ -5,12 +5,11 @@
  * Created on September 10, 2012, 12:23 PM
  */
 #include "hash.h"
-#include <iostream>
 using namespace std;
 
     hashTable::hashTable(int size) {
         capacity = hashTable::getPrime(size);
-        filled = 1;
+        filled = 0;
         try{
             data.resize(capacity);
         }
@@ -21,7 +20,7 @@ using namespace std;
     }
     
     int hashTable::insert(const std::string &key, void *pv) {
-        if((capacity/filled)<2)
+        if(filled>0 &&(capacity/filled)<2)
             if(!rehash()) return 2;
         
         int number = hash(key);
@@ -46,11 +45,9 @@ using namespace std;
     }
     
     bool hashTable::contains(const std::string &key){
-        //if(findPos(capacity==...))
         int number = hash(key);
-        //cout<<number<<key<<endl;
         while(data.at(number).isOccupied == true){
-            if(data.at(number).key == key) 
+            if((data.at(number).key == key) && (data.at(number).isDeleted==false)) 
                 return true;
             else number++;
         }
@@ -58,17 +55,19 @@ using namespace std;
     }
     
     /*void hashTable::*getPointer(const std::string &key, bool *b = NULL){
-        
+        return 0;
     }
     
     int hashTable::setPointer(const std::string &key, void *pv){
-
-    }*/
+        return 0;
+    }
+     */
     
     bool hashTable::remove(const std::string &key){
         int number = hash(key);
-        data.at(number).isDeleted=true;
-        data.at(number).isOccupied=false;
+        if(data.at(number).isDeleted=true)
+            return true;
+        return false;
     }
     
     int hashTable::hash(const std::string &key){
@@ -86,7 +85,7 @@ using namespace std;
         
     
     int hashTable::findPos(const std::string &key){
-        
+        return 0;
     }
     
     bool hashTable::rehash(){
@@ -102,10 +101,10 @@ using namespace std;
         for(int i = 0; i< capacity; i++)
             data.at(i).isOccupied = false;
         
-        for(int j = 0; j<oldData.size(); j++)
-            if((oldData.at(j).isOccupied == true)&&(oldData.at(j).isDeleted = false))
+        for(int j = 0; j<oldData.size(); j++) {
+            if((oldData.at(j).isOccupied == true)&&(oldData.at(j).isDeleted == false))
                 insert(oldData.at(j).key);
-        
+        }
         return true;
     }
     
