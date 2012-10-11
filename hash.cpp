@@ -56,9 +56,9 @@ using namespace std;
         return false;
     }
     
-    void *hashTable::getPointer(const std::string &key, bool *b){
-        int pos = findPos(key);
-        return data.at(pos).pv;
+    void* hashTable::getPointer(const std::string &key, bool *b){
+        int number = findPos(key);
+        return data[pos].pv;
     }
     
     int hashTable::setPointer(const std::string &key, void *pv){

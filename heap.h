@@ -88,8 +88,8 @@ private:
     void *pData; // A pointer to the actual data
   };
 
-  int capacity; // The current capacity of the hash table.
-  int filled;  // Number of occupied items in the table.
+  int capacity; 
+  int filled;  
 
   std::vector<node> data; // The actual entries are here.
   hashTable *mapping;
