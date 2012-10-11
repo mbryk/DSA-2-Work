@@ -24,8 +24,21 @@ using namespace std;
     int hashTable::insert(const std::string &key, void *pv) {
         if(filled>0 &&(capacity/filled)<2)
             if(!rehash()) return 2;
+
+        int number = hash(key);
+        
+        while(data[number].isOccupied==true){
+            if(data[number].isDeleted==false){
+                if(data[number].key == key) 
+                    return 1;
+                number++;
                 
-        int number = findPos(key);
+                if(number>capacity)
+                    number-=capacity;
+            }
+            else 
+                break;
+        }
         
         data[number].key = key;
         data[number].isOccupied = true;
@@ -35,21 +48,26 @@ using namespace std;
     }
     
     bool hashTable::contains(const std::string &key){
-        int number = hash(key);
-        while(data[number].isOccupied == true){
-            if((data[number].key == key) && (data[number].isDeleted==false)) 
-                return true;
-            else number++;
-        }
+        int pos = findPos(key);
+        if(pos!=-1)
+            return true;
         return false;
+
     }
     
     void* hashTable::getPointer(const std::string &key, bool *b){
         int pos = findPos(key);
-        return data[pos].pv;
+        if(pos!=-1) 
+            return data[pos].pv;
+        return NULL;
     }
     
     int hashTable::setPointer(const std::string &key, void *pv){
+        int pos = findPos(key);
+        if(pos==-1) 
+            return 1;
+        else
+            data[pos].pv = pv;
         return 0;
     }
     
@@ -77,20 +95,12 @@ using namespace std;
     
     int hashTable::findPos(const std::string &key){
         int number = hash(key);
-        
-        while(data[number].isOccupied==true){
-            if(data[number].isDeleted==false){
-                if(data[number].key == key) 
-                    return 1;
-                number++;
-                
-                if(number>capacity)
-                    number-=capacity;
-            }
-            else 
-                break;
+        while(data[number].isOccupied == true){
+            if((data[number].key == key) && (data[number].isDeleted==false)) 
+                return number;
+            else number++;
         }
-        return number;
+        return -1;
     }
     
     bool hashTable::rehash(){

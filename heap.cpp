@@ -36,6 +36,8 @@ int heap::insert(const std::string &id, int key, void *pv){
     data[posCur].key = key;
     data[posCur].pData = pv;
     
+    mapping.insert(data[posCur].id, &data[posCur]);
+    
     percolateUp(posCur);    
     
     return 0;
@@ -128,6 +130,7 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
 }
 
 void heap::percolateUp(int posCur){
+    bool changed = false;
     node temp = data[posCur];
 
     while((posCur > 1) && (data[posCur].key < data[posCur/2].key)) {
@@ -135,10 +138,12 @@ void heap::percolateUp(int posCur){
         
         mapping->setPointer(data[posCur].id, &data[posCur]);
         posCur /= 2;
+        changed = true;
     }
-    
-    data[posCur] = temp;
-    mapping->setPointer(data[posCur].id, &data[posCur]);
+    if(changed) {
+        data[posCur] = temp;
+        mapping->setPointer(data[posCur].id, &data[posCur]);
+    }
 }
 
 void heap::percolateDown(int posCur){
