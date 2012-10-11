@@ -18,38 +18,26 @@ using namespace std;
         catch (bad_alloc const&) {
         }
         for(int i = 0; i< size; i++)
-            data.at(i).isOccupied = false;
+            data[i].isOccupied = false;
     }
     
     int hashTable::insert(const std::string &key, void *pv) {
         if(filled>0 &&(capacity/filled)<2)
             if(!rehash()) return 2;
-        
-        int number = hash(key);
-        
-        while(data.at(number).isOccupied==true){
-            if(data.at(number).isDeleted==false){
-                if(data.at(number).key == key) 
-                    return 1;
-                number++;
                 
-                if(number>capacity)
-                    number-=capacity;
-            }
-            else 
-                break;
-        }
-        data.at(number).key = key;
-        data.at(number).isOccupied = true;
-        data.at(number).isDeleted = false;
+        int number = findPos(key);
+        
+        data[number].key = key;
+        data[number].isOccupied = true;
+        data[number].isDeleted = false;
         
         if(++filled) return 0;
     }
     
     bool hashTable::contains(const std::string &key){
         int number = hash(key);
-        while(data.at(number).isOccupied == true){
-            if((data.at(number).key == key) && (data.at(number).isDeleted==false)) 
+        while(data[number].isOccupied == true){
+            if((data[number].key == key) && (data[number].isDeleted==false)) 
                 return true;
             else number++;
         }
@@ -57,7 +45,7 @@ using namespace std;
     }
     
     void* hashTable::getPointer(const std::string &key, bool *b){
-        int number = findPos(key);
+        int pos = findPos(key);
         return data[pos].pv;
     }
     
@@ -68,7 +56,7 @@ using namespace std;
     
     bool hashTable::remove(const std::string &key){
         int number = hash(key);
-        if(data.at(number).isDeleted=true)
+        if(data[number].isDeleted=true)
             return true;
         return false;
     }
@@ -88,7 +76,21 @@ using namespace std;
         
     
     int hashTable::findPos(const std::string &key){
-        return 0;
+        int number = hash(key);
+        
+        while(data[number].isOccupied==true){
+            if(data[number].isDeleted==false){
+                if(data[number].key == key) 
+                    return 1;
+                number++;
+                
+                if(number>capacity)
+                    number-=capacity;
+            }
+            else 
+                break;
+        }
+        return number;
     }
     
     bool hashTable::rehash(){
@@ -102,11 +104,11 @@ using namespace std;
             return false;
         }
         for(int i = 0; i< capacity; i++)
-            data.at(i).isOccupied = false;
+            data[i].isOccupied = false;
         
         for(int j = 0; j<oldData.size(); j++) {
-            if((oldData.at(j).isOccupied == true)&&(oldData.at(j).isDeleted == false))
-                insert(oldData.at(j).key);
+            if((oldData[j].isOccupied == true)&&(oldData[j].isDeleted == false))
+                insert(oldData[j].key);
         }
         return true;
     }

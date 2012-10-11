@@ -28,7 +28,7 @@ heap::heap(int capacity){
   //     is not filled to capacity)
   //
 int heap::insert(const std::string &id, int key, void *pv){
-    if(filled ==capacity) return 1;
+    if(filled == capacity) return 1;
     if(mapping.contains(id)) return 2;
 
     int posCur = ++filled;
@@ -86,9 +86,7 @@ int heap::deleteMin(std::string *pId, int *pKey, void *ppData){
     if(pKey) pKey = data[1].key;
     if(ppData) *(static_cast<void **> (ppData)) = data[1].pData;
     
-    data[1].id = data[filled].id;
-    data[1].key = data[filled].key;
-    data[1].pData = data[filled].pData;
+    data[1] = data[filled];
     
     mapping->setPointer(data[1].id, &data[1]);
     percolateDown(1);
@@ -119,9 +117,7 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
     if(pKey) pKey = oldKey;
     if(ppData) *(static_cast<void **> (ppData)) = data[pos].pData;    
     
-    data[pos].id = data[filled].id;
-    data[pos].key = data[filled].key;
-    data[pos].pData = data[filled].pData;
+    data[pos] = data[filled];
     
     if(data[filled].key < oldKey)
         percolateUp();
@@ -132,39 +128,30 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
 }
 
 void heap::percolateUp(int posCur){
-    int tempId = data[posCur].id;
-    int tempKey = data[posCur].key;
-    int tempPointer = data[posCur].pData;
+    node temp = data[posCur];
+
     while((posCur > 1) && (data[posCur].key < data[posCur/2].key)) {
-        data[posCur].id = data[posCur/2].id;
-        data[posCur].key = data[posCur/2].key;
-        data[posCur].pData = data[posCur/2].pData;
+        data[posCur] = data[posCur/2];
         
         mapping->setPointer(data[posCur].id, &data[posCur]);
         posCur /= 2;
     }
-    data[posCur].id = tempId;
-    data[posCur].key = tempKey;
-    data[posCur].pData = tempPointer;
     
+    data[posCur] = temp;
     mapping->setPointer(data[posCur].id, &data[posCur]);
 }
 
 void heap::percolateDown(int posCur){
-    int tempId = data[posCur].id;
-    int tempKey = data[posCur].key;
-    int tempPointer = data[posCur].pData;
+    node temp = data[posCur];
+    
     while((posCur > 1) && (data[posCur].key < data[posCur/2].key)) {
-        data[posCur].id = data[posCur/2].id;
-        data[posCur].key = data[posCur/2].key;
-        data[posCur].pData = data[posCur/2].pData;
+        data[posCur] = data[posCur/2];
         
         mapping->setPointer(data[posCur].id, &data[posCur]);
         posCur /= 2;
     }
-    data[posCur].id = tempId;
-    data[posCur].key = tempKey;
-    data[posCur].pData = tempPointer;
+    
+    data[posCur] = temp;
     
     mapping->setPointer(data[posCur].id, &data[posCur]);    
 }
