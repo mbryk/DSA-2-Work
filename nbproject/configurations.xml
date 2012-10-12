@@ -4,19 +4,36 @@
     <df name="cpp" root=".">
       <df name="hw1">
         <in>HW_DSA_1.cpp</in>
+        <in>Makefile</in>
+        <in>debug.txt</in>
+        <in>dict.txt</in>
         <in>hash.cpp</in>
         <in>hash.h</in>
+        <in>input.txt</in>
+        <in>lyrics.txt</in>
         <in>main.cpp</in>
         <in>providedCode.cpp</in>
         <in>spellcheck.cpp</in>
       </df>
       <df name="hw2">
+        <in>ece165_useHeap_bits.docx</in>
+      </df>
+      <df name="nbproject">
+        <df name="private">
+          <in>Default.properties</in>
+          <in>configurations.xml</in>
+          <in>private.xml</in>
+        </df>
+        <in>Package-Default.bash</in>
+        <in>configurations.xml</in>
+        <in>project.xml</in>
       </df>
       <in>hash.cpp</in>
       <in>hash.h</in>
       <in>heap.cpp</in>
       <in>heap.h</in>
       <in>main.cpp</in>
+      <in>spellcheck.cpp</in>
       <in>useHeap.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"

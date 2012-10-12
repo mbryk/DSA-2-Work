@@ -12,6 +12,8 @@ using namespace std;
 heap::heap(int capacity){
     data.resize(capacity+1);
     mapping = new hashTable(capacity*2);
+    heap::capacity = capacity;
+    filled = 0;
 }
   
   //
@@ -29,14 +31,14 @@ heap::heap(int capacity){
   //
 int heap::insert(const std::string &id, int key, void *pv){
     if(filled == capacity) return 1;
-    if(mapping.contains(id)) return 2;
+    if(mapping->contains(id)) return 2;
 
     int posCur = ++filled;
     data[posCur].id = id;
     data[posCur].key = key;
     data[posCur].pData = pv;
     
-    mapping.insert(data[posCur].id, &data[posCur]);
+    mapping->insert(data[posCur].id, &data[posCur]);
     
     percolateUp(posCur);    
     
@@ -58,8 +60,8 @@ int heap::setKey(const std::string &id, int key){
     node *pn = static_cast<node *> (mapping->getPointer(id, &b));
     if(!b)
         return 1;
-    int oldKey = pn.key;
-    pn.key = key;
+    int oldKey = pn->key;
+    pn->key = key;
     int pos = getPos(pn);
     
     if(key>oldKey)
@@ -82,18 +84,17 @@ int heap::setKey(const std::string &id, int key){
   //   1 if the heap is empty
   //
 int heap::deleteMin(std::string *pId, int *pKey, void *ppData){
-    if(filled==1) return 0;
+    if(filled==0) return 1;
     
-    if(pId) pId = data[1].id;
-    if(pKey) pKey = data[1].key;
+    if(pId) *pId = data[1].id;
+    if(pKey) *pKey = data[1].key;
     if(ppData) *(static_cast<void **> (ppData)) = data[1].pData;
     
-    data[1] = data[filled];
+    data[1] = data[filled--];
     
     mapping->setPointer(data[1].id, &data[1]);
     percolateDown(1);
     
-    filled--;
     return 0;
 }
 
@@ -116,15 +117,15 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
     int pos = getPos(pn);
     int oldKey = data[pos].key;
     
-    if(pKey) pKey = oldKey;
+    if(pKey) *pKey = oldKey;
     if(ppData) *(static_cast<void **> (ppData)) = data[pos].pData;    
     
     data[pos] = data[filled];
     
     if(data[filled].key < oldKey)
-        percolateUp();
+        percolateUp(pos);
     else if(data[filled].key > oldKey)
-        percolateDown();
+        percolateDown(pos);
     filled--;
     return 0;
 }
@@ -148,12 +149,17 @@ void heap::percolateUp(int posCur){
 
 void heap::percolateDown(int posCur){
     node temp = data[posCur];
+    int child;
     
-    while((posCur > 1) && (data[posCur].key < data[posCur/2].key)) {
-        data[posCur] = data[posCur/2];
-        
-        mapping->setPointer(data[posCur].id, &data[posCur]);
-        posCur /= 2;
+    for(; posCur * 2 <= filled; posCur = child) {
+        child = posCur *2;
+        if( child != filled && data[child + 1].key < data[child].key)
+            child++;
+        if( data[child].key < temp.key) {
+            data[posCur] = data[child];  
+            mapping->setPointer(data[posCur].id, &data[posCur]);
+        } else
+            break;
     }
     
     data[posCur] = temp;
