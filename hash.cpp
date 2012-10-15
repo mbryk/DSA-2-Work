@@ -43,6 +43,7 @@ using namespace std;
         data[number].key = key;
         data[number].isOccupied = true;
         data[number].isDeleted = false;
+        data[number].pv = pv;
         
         if(++filled) return 0;
     }
@@ -59,6 +60,7 @@ using namespace std;
         int pos = findPos(key);
         if(pos!=-1) 
             return data[pos].pv;
+        *b = false;
         return NULL;
     }
     
@@ -118,13 +120,13 @@ using namespace std;
         
         for(int j = 0; j<oldData.size(); j++) {
             if((oldData[j].isOccupied == true)&&(oldData[j].isDeleted == false))
-                insert(oldData[j].key);
+                insert(oldData[j].key, oldData[j].pv);
         }
         return true;
     }
     
     int hashTable::getPrime(int size){
-        int primes[] = {19997,40009,80021,160049,320101,640219,1301221,2783999};
+        int primes[] = {101,19997,40009,80021,160049,320101,640219,1301221,2783999};
         for(int i=0; i < sizeof(primes); i++) {
             if(size<primes[i]) return primes[i];
         }

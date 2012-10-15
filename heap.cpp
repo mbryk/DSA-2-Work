@@ -7,6 +7,7 @@
 
 #include "heap.h"
 #include "hash.h"
+#include <iostream>
 using namespace std;
 
 heap::heap(int capacity){
@@ -60,13 +61,13 @@ int heap::setKey(const std::string &id, int key){
     node *pn = static_cast<node *> (mapping->getPointer(id, &b));
     if(!b)
         return 1;
-    int oldKey = pn->key;
-    pn->key = key;
     int pos = getPos(pn);
-    
-    if(key>oldKey)
+    int oldKey = data[pos].key;
+    data[pos].key = key;
+
+    if(key<oldKey)
         percolateUp(pos);
-    else if(key<oldKey)
+    else if(key>oldKey)
         percolateDown(pos);
     return 0;
 }
@@ -119,6 +120,8 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
     
     if(pKey) *pKey = oldKey;
     if(ppData) *(static_cast<void **> (ppData)) = data[pos].pData;    
+    
+    mapping->remove(id);
     
     data[pos] = data[filled];
     
