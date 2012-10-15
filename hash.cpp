@@ -126,7 +126,7 @@ using namespace std;
     }
     
     int hashTable::getPrime(int size){
-        int primes[] = {101,19997,40009,80021,160049,320101,640219,1301221,2783999};
+        int primes[] = {101,467,947,2063,9901,19997,40009,80021,160049,320101,640219,1301221,2783999,6500003};
         for(int i=0; i < sizeof(primes); i++) {
             if(size<primes[i]) return primes[i];
         }

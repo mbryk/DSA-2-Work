@@ -90,11 +90,15 @@ int heap::deleteMin(std::string *pId, int *pKey, void *ppData){
     if(pId) *pId = data[1].id;
     if(pKey) *pKey = data[1].key;
     if(ppData) *(static_cast<void **> (ppData)) = data[1].pData;
+    mapping->remove(data[1].id);
     
-    data[1] = data[filled--];
+    filled--;
     
-    mapping->setPointer(data[1].id, &data[1]);
-    percolateDown(1);
+    if(filled!=0){
+        data[1] = data[filled];
+        mapping->setPointer(data[1].id, &data[1]);
+        percolateDown(1);
+    }
     
     return 0;
 }
