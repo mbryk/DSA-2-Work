@@ -27,17 +27,14 @@ using namespace std;
 
         int number = hash(key);
         
-        while(data[number].isOccupied==true){
-            if(data[number].isDeleted==false){
-                if(data[number].key == key) 
-                    return 1;
+        while(data[number].isOccupied == true){
+            if((data[number].key == key) && (data[number].isDeleted==false)) 
+                return 1;
+            else {
                 number++;
-                
                 if(number>capacity)
                     number-=capacity;
             }
-            else 
-                break;
         }
         
         data[number].key = key;
@@ -58,9 +55,12 @@ using namespace std;
     
     void* hashTable::getPointer(const std::string &key, bool *b){
         int pos = findPos(key);
-        if(pos!=-1) 
+        if(pos!=-1){
+            if(b) *b = true;
             return data[pos].pv;
-        *b = false;
+        }
+            
+        if(b) *b = false;
         return NULL;
     }
     
@@ -75,9 +75,11 @@ using namespace std;
     
     
     bool hashTable::remove(const std::string &key){
-        int number = hash(key);
-        if(data[number].isDeleted=true)
+        int number = findPos(key);
+        if(number != -1){
+            data[number].isDeleted = true;
             return true;
+        }
         return false;
     }
     
@@ -100,7 +102,11 @@ using namespace std;
         while(data[number].isOccupied == true){
             if((data[number].key == key) && (data[number].isDeleted==false)) 
                 return number;
-            else number++;
+            else {
+                number++;
+                if(number>capacity)
+                    number-=capacity;
+            }
         }
         return -1;
     }
@@ -118,9 +124,12 @@ using namespace std;
         for(int i = 0; i< capacity; i++)
             data[i].isOccupied = false;
         
+        filled = 0;
+        
         for(int j = 0; j<oldData.size(); j++) {
-            if((oldData[j].isOccupied == true)&&(oldData[j].isDeleted == false))
+            if((oldData[j].isOccupied == true)&&(oldData[j].isDeleted == false)){
                 insert(oldData[j].key, oldData[j].pv);
+            }
         }
         return true;
     }

@@ -1,6 +1,8 @@
 /* 
  * File:   heap.cpp
- * Author: mark
+ * Author: Mark Bryk
+ * ECE 165
+ * HW #2
  * 
  * Created on October 10, 2012, 8:08 AM
  */
@@ -17,19 +19,6 @@ heap::heap(int capacity){
     filled = 0;
 }
   
-  //
-  // insert - Inserts a new node into the binary heap
-  //
-  // Inserts a node with the specified id string, key,
-  // and optionally a pointer.  They key is used to
-  // determine the final position of the new node.
-  //
-  // Returns:
-  //   0 on success
-  //   1 if the heap is already filled to capacity
-  //   2 if a node with the given id already exists (but the heap
-  //     is not filled to capacity)
-  //
 int heap::insert(const std::string &id, int key, void *pv){
     if(filled == capacity) return 1;
     if(mapping->contains(id)) return 2;
@@ -46,18 +35,8 @@ int heap::insert(const std::string &id, int key, void *pv){
     return 0;
 }
 
-  //
-  // setKey - set the key of the specified node to the specified value
-  //
-  // I have decided that the class should provide this member function
-  // instead of two separate increaseKey and decreaseKey functions.
-  //
-  // Returns:
-  //   0 on success
-  //   1 if a node with the given id does not exist
-  //
 int heap::setKey(const std::string &id, int key){
-    bool b = 1;
+    bool b = true;
     node *pn = static_cast<node *> (mapping->getPointer(id, &b));
     if(!b)
         return 1;
@@ -71,19 +50,7 @@ int heap::setKey(const std::string &id, int key){
         percolateDown(pos);
     return 0;
 }
-  //
-  // deleteMin - return the data associated with the smallest key
-  //             and delete that node from the binary heap
-  //
-  // If pId is supplied (i.e., it is not NULL), write to that address
-  // the id of the node being deleted. If pKey is supplied, write to
-  // that address the key of the node being deleted. If ppData is
-  // supplied, write to that address the associated void pointer.
-  //
-  // Returns:
-  //   0 on success
-  //   1 if the heap is empty
-  //
+
 int heap::deleteMin(std::string *pId, int *pKey, void *ppData){
     if(filled==0) return 1;
     
@@ -91,31 +58,17 @@ int heap::deleteMin(std::string *pId, int *pKey, void *ppData){
     if(pKey) *pKey = data[1].key;
     if(ppData) *(static_cast<void **> (ppData)) = data[1].pData;
     mapping->remove(data[1].id);
+        
+    data[1] = data[filled--];
     
-    filled--;
-    
-    if(filled!=0){
-        data[1] = data[filled];
-        mapping->setPointer(data[1].id, &data[1]);
-        percolateDown(1);
-    }
-    
+    mapping->setPointer(data[1].id, &data[1]);
+    percolateDown(1);
+
     return 0;
 }
 
-  //
-  // remove - delete the node with the specified id from the binary heap
-  //
-  // If pKey is supplied, write to that address the key of the node
-  // being deleted. If ppData is supplied, write to that address the
-  // associated void pointer.
-  //
-  // Returns:
-  //   0 on success
-  //   1 if a node with the given id does not exist
-  //
 int heap::remove(const std::string &id, int *pKey, void *ppData){
-    bool b = 1;
+    bool b = true;
     node *pn = static_cast<node *> (mapping->getPointer(id, &b));
     if(!b) return 1;
     
@@ -128,6 +81,7 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
     mapping->remove(id);
     
     data[pos] = data[filled];
+    mapping->setPointer(data[pos].id, &data[pos]);
     
     if(data[filled].key < oldKey)
         percolateUp(pos);
@@ -141,7 +95,7 @@ void heap::percolateUp(int posCur){
     bool changed = false;
     node temp = data[posCur];
 
-    while((posCur > 1) && (data[posCur].key < data[posCur/2].key)) {
+    while((posCur > 1) && (temp.key < data[posCur/2].key)) {
         data[posCur] = data[posCur/2];
         
         mapping->setPointer(data[posCur].id, &data[posCur]);

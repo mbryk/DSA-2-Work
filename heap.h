@@ -1,7 +1,9 @@
 /* 
- * File:   heap.h
- * Author: mark
- *
+ * File:   heap.cpp
+ * Author: Mark Bryk
+ * ECE 165
+ * HW #2
+ * 
  * Created on October 10, 2012, 8:08 AM
  */
 
