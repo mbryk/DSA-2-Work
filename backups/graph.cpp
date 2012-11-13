@@ -16,6 +16,6 @@ void addNode(int nId, int nId2, int cost){
     
 }
 int shortestPath(int startingVertex){
-    return 0;
+    
 }
 

@@ -10,18 +10,14 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "graph.h"
+#include <graph.h>
 using namespace std;
 
 /*
  * 
  */
 int vId(string vertex){
-    vertex.erase(0,1);
-    istringstream buffer(vertex);
-    int vId;
-    buffer >>vId;
-    return vId;
+    return vertex.erase(0,1);
 }
 
 void loadGraph(string GraphFile, graphClass &graph){
