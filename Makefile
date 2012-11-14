@@ -1,5 +1,5 @@
 djike.exe: main.o graph.o heap.o hash.o
-	g++ -o dike.exe main.o graph.o heap.o hash.o
+	g++ -o djike.exe main.o graph.o heap.o hash.o
 
 main.o: main.cpp
 	g++ -c main.cpp

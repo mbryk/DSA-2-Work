@@ -32,8 +32,7 @@ void loadGraph(string GraphFile, graphClass &graph){
     input.open(GraphFile.c_str());
     while(!input.eof()){
         input>>vertex>>vertex2>>cost;
-        cout<<vertex<<vertex2<<cost<<endl;
-        //graph.addNode(vId(vertex), vId(vertex2), cost);
+        graph.addNode(vId(vertex), vId(vertex2), cost);
     }
 }
 int main(int argc, char** argv) {
@@ -48,17 +47,18 @@ int main(int argc, char** argv) {
     loadGraph(GraphFile, graph);
     clock_t t2 = clock();
     double timeDiff = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    cout << "Total time (in seconds) to load dictionary: " << timeDiff << endl;    
+    cout << "Total time (in seconds) to load graph: " << timeDiff << endl;    
     
     cout<<"Enter id of starting vertex: ";
     cin>>StartingVertex;
     
     clock_t t3 = clock();
     //graph.shortestPath(StartingVertex);
+    graph.printGraph();
     clock_t t4 = clock();
     double timeDiff2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC;
     
-    cout << "Total time (in seconds) to check document: " << timeDiff2 << endl;  
+    cout << "Total time (in seconds) to check SPL: " << timeDiff2 << endl;  
     
     return 0;
 }

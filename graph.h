@@ -13,18 +13,20 @@
 class graphClass {
 public:
     graphClass();
+    void graphClass::printGraph();
     void addNode(int nId, int nId2, int cost);
-    int shortestPath(int startingVertex);
+    void shortestPath(int startingVertex);
 
 private:
+    class adjacent{
+    public:
+        int adjId;
+        int cost;
+    };
     class node {
     public:
         int id;
-        class adjList{
-            int adjId;
-            int cost;
-        };
-        std::list<adjList> adjLists;
+        std::list<adjacent> adjList;
     };
     
     std::list<node> nodes;
