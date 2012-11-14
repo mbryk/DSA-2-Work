@@ -12,10 +12,10 @@ graphClass::graphClass() {
     
 }
 
-void addNode(int nId, int nId2, int cost){
+void graphClass::addNode(int nId, int nId2, int cost){
     
 }
-int shortestPath(int startingVertex){
+int graphClass::shortestPath(int startingVertex){
     return 0;
 }
 
