@@ -29,19 +29,30 @@ void graphClass::printGraph(){
 }
 void graphClass::addNode(int nId, int nId2, int cost){
     //create new node if !node exists{
-    //temporary new node checker....
 
-    list<node>::const_iterator iterator;
+    list<node>::iterator iterator;
+    list<adjacent> adjList;
+    node *newNode;
+    bool here = false;
+    
     adjacent *newAdj= new adjacent;
     newAdj->adjId = nId2;
     newAdj->cost = cost;
     
-    node *newNode;
-    bool here;
     for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
         if(iterator->id == nId) {
             here = true;
-            iterator->adjList.insert(*iterator->adjList.end(), *newAdj);
+            
+            /*adjList = iterator->adjList;
+            adjList.insert(adjList.end(), *newAdj);
+            (*iterator).adjList = adjList;
+            
+            *newNode = (*iterator);
+            cout<< newNode->id;
+            newNode->id = 10;
+            cout<< newNode->id;*/
+            
+            iterator->adjList.insert(iterator->adjList.end(), *newAdj);
         }
     }
     

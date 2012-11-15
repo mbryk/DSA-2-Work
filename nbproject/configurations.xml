@@ -25,7 +25,7 @@
       <df name="hw2">
         <in>useHeap.cpp</in>
       </df>
-      <in>djikstras help.cpp</in>
+      <in>adjikstras help.cpp</in>
       <in>graph.cpp</in>
       <in>graph.h</in>
       <in>hash.cpp</in>
