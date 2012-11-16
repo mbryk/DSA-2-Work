@@ -13,9 +13,11 @@
 class graphClass {
 public:
     graphClass();
-    void graphClass::printGraph();
+    void printGraph();
     void addNode(int nId, int nId2, int cost);
     void shortestPath(int startingVertex);
+    int shortestUnknown();
+    void updateAdjacents(const node &node);
 
 private:
     class adjacent{
@@ -26,6 +28,8 @@ private:
     class node {
     public:
         int id;
+        bool known;
+        int distance;
         std::list<adjacent> adjList;
     };
     

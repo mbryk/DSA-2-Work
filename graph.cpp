@@ -22,16 +22,16 @@ void graphClass::printGraph(){
         cout << iterator->id << " with adjacents: ";
         adjList = iterator->adjList;
         for (iterator2 = adjList.begin(); iterator2 != adjList.end(); ++iterator2) {
-            cout<< iterator2->adjId << "=" << iterator2->cost << ", ";
+            cout<< iterator2->adjId << " cost=" << iterator2->cost << ", ";
         }
         cout<<endl;
     }
 }
+
 void graphClass::addNode(int nId, int nId2, int cost){
     //create new node if !node exists{
 
     list<node>::iterator iterator;
-    list<adjacent> adjList;
     node *newNode;
     bool here = false;
     
@@ -43,15 +43,6 @@ void graphClass::addNode(int nId, int nId2, int cost){
         if(iterator->id == nId) {
             here = true;
             
-            /*adjList = iterator->adjList;
-            adjList.insert(adjList.end(), *newAdj);
-            (*iterator).adjList = adjList;
-            
-            *newNode = (*iterator);
-            cout<< newNode->id;
-            newNode->id = 10;
-            cout<< newNode->id;*/
-            
             iterator->adjList.insert(iterator->adjList.end(), *newAdj);
         }
     }
@@ -59,12 +50,48 @@ void graphClass::addNode(int nId, int nId2, int cost){
     if(!here){
         newNode = new node;
         newNode->id = nId;
+        newNode->known = false;
+        newNode->distance = 1000;
         newNode->adjList.insert(newNode->adjList.end(), *newAdj);
         nodes.insert(nodes.end(), *newNode);
     }
 }
 
-void graphClass::shortestPath(int startingVertex){
-    cout<< 0;
+void graphClass::shortestPath(int s){
+    list<node>::iterator iterator;
+    for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
+        if(iterator->id == s){
+            iterator->known = true;
+        }
+    }
 }
+
+int graphClass::shortestUnknown(){
+    list<node>::iterator iterator;
+    node *node;
+    int shortest = 1000;
+    for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
+        if(iterator->known == false){
+            if(iterator->distance < shortest){
+                shortest = iterator->distance;
+                *node = (*iterator);
+            }
+        }
+    }
+    if(!node) return false;
+    else {
+        node->known = true;
+        graphClass::updateAdjacents(node);
+        return true;
+    }
+}
+
+void graphClass::updateAdjacents(const node &node){
+    list<adjacent>::iterator iterator;
+    for (iterator = node->adjList.begin(); iterator != node->adjList.end(); ++iterator) {
+        if((iterator->cost + node->distance)<(iterator->node.distance))
+            iterator->node.distance = iterator->cost + node->distance;
+    }
+}
+
 
