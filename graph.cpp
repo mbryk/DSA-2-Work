@@ -8,6 +8,7 @@
 #include <iostream>
 #include "graph.h"
 #include "heap.h"
+#include "hash.h"
 
 using namespace std;
 graphClass::graphClass() {
@@ -28,33 +29,31 @@ void graphClass::printGraph(){
     }
 }
 
-void graphClass::addNode(int nId, int nId2, int cost){
-    //create new node if !node exists{
-
-    list<node>::iterator iterator;
-    node *newNode;
-    bool here = false;
+void graphClass::getNode(int nId){
+    (node*) pointer;
     
-    adjacent *newAdj= new adjacent;
-    newAdj->adjId = nId2;
-    newAdj->cost = cost;
+    pointer = hashTable::*getPointer(nId);
     
-    for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        if(iterator->id == nId) {
-            here = true;
-            
-            iterator->adjList.insert(iterator->adjList.end(), *newAdj);
-        }
-    }
-    
-    if(!here){
-        newNode = new node;
+    if(pointer == NULL){
+        node* newNode = new node;
         newNode->id = nId;
         newNode->known = false;
         newNode->distance = 1000;
-        newNode->adjList.insert(newNode->adjList.end(), *newAdj);
-        nodes.insert(nodes.end(), *newNode);
+        nodes.insert(nodes.end(), newNode);
+        pointer = newNode;
     }
+    return pointer;
+}
+
+void graphClass::addAdjacent(int nId1, int nId2, int cost){
+    node *sourceNode, *edgeNode;
+    sourceNode = *getNode(nId1);
+    edgeNode = *getNode(nId2);
+    
+    adjacent *newAdj= new adjacent;
+    newAdj->node = edgeNode;
+    newAdj->cost = cost;
+    sourceNode->adjList.insert(sourceNode->adjList.end(), *newAdj);
 }
 
 void graphClass::shortestPath(int s){

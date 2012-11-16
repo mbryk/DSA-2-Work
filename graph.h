@@ -24,6 +24,7 @@ private:
     public:
         int adjId;
         int cost;
+        node *node;
     };
     class node {
     public:
@@ -33,7 +34,7 @@ private:
         std::list<adjacent> adjList;
     };
     
-    std::list<node> nodes;
+    std::list<*node> nodes;
     heap *graphHeap;
        
 };
