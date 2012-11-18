@@ -47,7 +47,7 @@ void* graphClass::getNode(string nId){
     return pointer;
 }
 
-void graphClass::addAdjacent(string nId1, string nId2, string cost){
+void graphClass::addAdjacent(string nId1, string nId2, int cost){
     myNode *sourceNode, *edgeNode;
     sourceNode = static_cast<myNode *> (getNode(nId1));
     edgeNode = static_cast<myNode *> (getNode(nId2));
@@ -61,6 +61,7 @@ void graphClass::addAdjacent(string nId1, string nId2, string cost){
 void graphClass::shortestPath(string nId){
     heap graphHeap(nodes.size());
     myNode *node;
+    int distance;
     
     list<myNode*>::iterator iterator;
 
@@ -84,11 +85,11 @@ void graphClass::shortestPath(string nId){
             if(node->distance == 1000){
                 continue;
             }
-            distance = (*it)->cost + node->distance;
-            if(distance < (*it)->node->distance){
-                (*it)->node->distance = distance;
-                graphHeap.setKey((*it)->node->id, distance);
-                (*it)->node->previous = node;
+            distance = (*it).cost + node->distance;
+            if(distance < (*it).node->distance){
+                (*it).node->distance = distance;
+                graphHeap.setKey((*it).node->id, distance);
+                (*it).node->previous = node;
             }
         }
     }

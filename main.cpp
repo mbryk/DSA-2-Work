@@ -31,7 +31,7 @@ void loadGraph(string GraphFile, graphClass &graph){
 int main(int argc, char** argv) {
     graphClass graph;
     string GraphFile;
-    int StartingVertex;
+    string StartingVertex;
     
     cout<<"Enter name of graph: ";
     cin>>GraphFile;
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     
     clock_t t3 = clock();
     graph.shortestPath(StartingVertex);
-    //graph.printGraph();
+    graph.printGraph();
     clock_t t4 = clock();
     double timeDiff2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC;
     
