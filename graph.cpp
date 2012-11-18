@@ -6,7 +6,8 @@
  */
 
 #include <iostream>
-#include <sstream>
+#include <fstream>
+#include <climits>
 #include "graph.h"
 #include "heap.h"
 #include "hash.h"
@@ -14,35 +15,42 @@
 using namespace std;
 graphClass::graphClass() {
     graphHeap = new heap(100);
-    hashish = new hashTable(100*2);
+    hash = new hashTable(100*2);
 }
-void graphClass::printGraph(){
+void graphClass::printGraph(string OutputFile){
+    ofstream output;
+    output.open(OutputFile.c_str());
+    
     list<myNode*>::const_iterator iterator;
-    list<adjacent>::const_iterator iterator2;
-    list<adjacent> adjList;
+    string sources;
     
     for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        cout << (*iterator)->id << " with adjacents: ";
-        adjList = (*iterator)->adjList;
-        for (iterator2 = adjList.begin(); iterator2 != adjList.end(); ++iterator2) {
-            cout<< iterator2->adjId << " cost=" << iterator2->cost << ", ";
+        output << (*iterator)->id << ": ";
+        if((*iterator)->distance == INT_MAX)
+            output << "NO PATH" <<endl;
+        else{
+            sources = printPath(*iterator);
+            output<< (*iterator)->distance << " [" << sources << "]"<<endl;
         }
-        cout<<endl;
     }
+}
+string graphClass::printPath(myNode* node){
+    string path;
+    if(node->previous != NULL) path= printPath(node->previous) + ", ";
+    path += node->id; 
+    return path;
 }
 
 void* graphClass::getNode(string nId){
     myNode *pointer;
     
-    pointer = static_cast<myNode *> (hashish->getPointer(nId));
+    pointer = static_cast<myNode *> (hash->getPointer(nId));
     
     if(pointer == NULL){
         pointer = new myNode;
         pointer->id = nId;
-        pointer->known = false;
-        pointer->distance = 1000;
         nodes.insert(nodes.end(), pointer);
-        hashish->insert(nId, pointer);
+        hash->insert(nId, pointer);
     }
     return pointer;
 }
@@ -66,23 +74,22 @@ void graphClass::shortestPath(string nId){
     list<myNode*>::iterator iterator;
 
     for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        (*iterator)->previous = NULL;
         if((*iterator)->id == nId){
             (*iterator)->distance = 0;
-            (*iterator)->known = true;
         }
         else {
-            (*iterator)->distance = 1000;
-            (*iterator)->known = false;
-            graphHeap.insert((*iterator)->id, (*iterator)->distance, (*iterator));
+            (*iterator)->distance = INT_MAX;
         }
+        (*iterator)->known = false;
+        (*iterator)->previous = NULL;
+        graphHeap.insert((*iterator)->id, (*iterator)->distance, (*iterator));
     }
     
     list<adjacent>::iterator it;
-    while(graphHeap.deleteMin(NULL, NULL, &node)){
+    while(!graphHeap.deleteMin(NULL, NULL, &node)){
         node->known = true;
         for (it = node->adjList.begin(); it != node->adjList.end(); ++it) {
-            if(node->distance == 1000){
+            if(node->distance == INT_MAX){
                 continue;
             }
             distance = (*it).cost + node->distance;

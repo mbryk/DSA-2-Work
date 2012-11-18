@@ -8,14 +8,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <fstream>
 #include "graph.h"
 using namespace std;
-
-/*
- * 
- */
 
 void loadGraph(string GraphFile, graphClass &graph){
     ifstream input;
@@ -28,31 +23,30 @@ void loadGraph(string GraphFile, graphClass &graph){
         graph.addAdjacent(vertex, vertex2, cost);
     }
 }
+
 int main(int argc, char** argv) {
     graphClass graph;
-    string GraphFile;
+    string GraphFile, OutputFile;
     string StartingVertex;
     
-    cout<<"Enter name of graph: ";
+    cout<<"Enter name of graph file: ";
     cin>>GraphFile;
-    
-    clock_t t1 = clock();
     loadGraph(GraphFile, graph);
-    clock_t t2 = clock();
-    double timeDiff = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
-    cout << "Total time (in seconds) to load graph: " << timeDiff << endl;    
     
-    cout<<"Enter id of starting vertex: ";
+    cout<<"Enter a valid vertex id for the starting vertex: ";
     cin>>StartingVertex;
     
-    clock_t t3 = clock();
+    clock_t t1 = clock();
     graph.shortestPath(StartingVertex);
-    graph.printGraph();
-    clock_t t4 = clock();
-    double timeDiff2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC;
+    clock_t t2 = clock();
+    double timeDiff = ((double) (t2 - t1)) / CLOCKS_PER_SEC;
     
-    cout << "Total time (in seconds) to check SPL: " << timeDiff2 << endl;  
+    cout << "Total time (in seconds) to apply Dijkstra's algorithm: " << timeDiff << endl;  
     
+    cout<<"Enter name of output file: ";
+    cin>>OutputFile;
+    graph.printGraph(OutputFile);
+
     return 0;
 }
 

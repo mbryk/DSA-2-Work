@@ -32,7 +32,7 @@ using namespace std;
                 return 1;
             else {
                 number++;
-                if(number>capacity)
+                if(number >= capacity)
                     number-=capacity;
             }
         }
@@ -104,7 +104,7 @@ using namespace std;
                 return number;
             else {
                 number++;
-                if(number>capacity)
+                if(number >= capacity)
                     number-=capacity;
             }
         }

@@ -14,11 +14,10 @@
 class graphClass {
 public:
     graphClass();
-    void printGraph();
     void *getNode(std::string nId);
     void addAdjacent(std::string nId, std::string nId2, int cost);
     void shortestPath(std::string startingVertex);
-
+    void printGraph(std::string OutputFile);
 private:
     class adjacent;
     class myNode {
@@ -31,14 +30,14 @@ private:
     };
     class adjacent{
     public:
-        std::string adjId;
         int cost;
         myNode* node;
     };
     
+    std::string printPath(myNode* node);
     std::list<myNode*> nodes;
     heap *graphHeap;
-    hashTable *hashish;
+    hashTable *hash;
        
 };
 
