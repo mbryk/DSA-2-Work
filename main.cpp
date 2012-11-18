@@ -16,13 +16,6 @@ using namespace std;
 /*
  * 
  */
-int vId(string vertex){
-    vertex.erase(0,1);
-    istringstream buffer(vertex);
-    int vId;
-    buffer >> vId;
-    return vId;
-}
 
 void loadGraph(string GraphFile, graphClass &graph){
     ifstream input;
@@ -32,7 +25,7 @@ void loadGraph(string GraphFile, graphClass &graph){
     input.open(GraphFile.c_str());
     while(!input.eof()){
         input>>vertex>>vertex2>>cost;
-        graph.addAdjacent(vId(vertex), vId(vertex2), cost);
+        graph.addAdjacent(vertex, vertex2, cost);
     }
 }
 int main(int argc, char** argv) {
@@ -53,8 +46,8 @@ int main(int argc, char** argv) {
     cin>>StartingVertex;
     
     clock_t t3 = clock();
-    //graph.shortestPath(StartingVertex);
-    graph.printGraph();
+    graph.shortestPath(StartingVertex);
+    //graph.printGraph();
     clock_t t4 = clock();
     double timeDiff2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC;
     

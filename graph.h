@@ -15,24 +15,23 @@ class graphClass {
 public:
     graphClass();
     void printGraph();
-    void *getNode(int nId);
-    void addAdjacent(int nId, int nId2, int cost);
-    void shortestPath(int startingVertex);
-    int shortestUnknown();
-    void updateAdjacents(int nId);
+    void *getNode(std::string nId);
+    void addAdjacent(std::string nId, std::string nId2, int cost);
+    void shortestPath(std::string startingVertex);
 
 private:
     class adjacent;
     class myNode {
     public:
-        int id;
+        std::string id;
         bool known;
         int distance;
         std::list<adjacent> adjList;
+        myNode* previous;
     };
     class adjacent{
     public:
-        int adjId;
+        std::string adjId;
         int cost;
         myNode* node;
     };

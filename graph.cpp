@@ -31,14 +31,10 @@ void graphClass::printGraph(){
     }
 }
 
-void* graphClass::getNode(int nId){
+void* graphClass::getNode(string nId){
     myNode *pointer;
     
-    stringstream s;
-    s << nId;
-    string strId = s.str();
-    
-    pointer = hashish->getPointer(strId);
+    pointer = static_cast<myNode *> (hashish->getPointer(nId));
     
     if(pointer == NULL){
         pointer = new myNode;
@@ -46,15 +42,15 @@ void* graphClass::getNode(int nId){
         pointer->known = false;
         pointer->distance = 1000;
         nodes.insert(nodes.end(), pointer);
-        hashish->insert(strId, pointer);
+        hashish->insert(nId, pointer);
     }
     return pointer;
 }
 
-void graphClass::addAdjacent(int nId1, int nId2, int cost){
+void graphClass::addAdjacent(string nId1, string nId2, string cost){
     myNode *sourceNode, *edgeNode;
-    sourceNode = getNode(nId1);
-    edgeNode = getNode(nId2);
+    sourceNode = static_cast<myNode *> (getNode(nId1));
+    edgeNode = static_cast<myNode *> (getNode(nId2));
     
     adjacent *newAdj= new adjacent;
     newAdj->node = edgeNode;
@@ -62,53 +58,38 @@ void graphClass::addAdjacent(int nId1, int nId2, int cost){
     sourceNode->adjList.insert(sourceNode->adjList.end(), *newAdj);
 }
 
-void graphClass::shortestPath(int nId){
+void graphClass::shortestPath(string nId){
+    heap graphHeap(nodes.size());
     myNode *node;
-    stringstream s;
-    s << nId;
-    string strId = s.str();
-    node = hashish->getPointer(strId);
     
-    node->known = true;
-    node->distance = 0;
-    updateAdjacents(nId);
-    
-    while(shortestUnknown());
-    printGraph();
-}
-
-int graphClass::shortestUnknown(){
     list<myNode*>::iterator iterator;
-    myNode *node;
-    int shortest = 1000;
+
     for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        if((*iterator)->known == false){
-            if((*iterator)->distance < shortest){
-                shortest = (*iterator)->distance;
-                node = (*iterator);
+        (*iterator)->previous = NULL;
+        if((*iterator)->id == nId){
+            (*iterator)->distance = 0;
+            (*iterator)->known = true;
+        }
+        else {
+            (*iterator)->distance = 1000;
+            (*iterator)->known = false;
+            graphHeap.insert((*iterator)->id, (*iterator)->distance, (*iterator));
+        }
+    }
+    
+    list<adjacent>::iterator it;
+    while(graphHeap.deleteMin(NULL, NULL, &node)){
+        node->known = true;
+        for (it = node->adjList.begin(); it != node->adjList.end(); ++it) {
+            if(node->distance == 1000){
+                continue;
+            }
+            distance = (*it)->cost + node->distance;
+            if(distance < (*it)->node->distance){
+                (*it)->node->distance = distance;
+                graphHeap.setKey((*it)->node->id, distance);
+                (*it)->node->previous = node;
             }
         }
     }
-    if(!node) return false;
-    else {
-        node->known = true;
-        graphClass::updateAdjacents(node->id);
-        return true;
-    }
 }
-
-void graphClass::updateAdjacents(int nId){
-    myNode *node;
-    stringstream s;
-    s << nId;
-    string strId = s.str();
-    node = hashish->getPointer(strId);
-    
-    list<adjacent>::iterator iterator;
-    for (iterator = node->adjList.begin(); iterator != node->adjList.end(); ++iterator) {
-        if((iterator->cost + node->distance)< (iterator->node->distance))
-            iterator->node->distance = iterator->cost + node->distance;
-    }
-}
-
-
