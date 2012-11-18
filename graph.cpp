@@ -32,7 +32,7 @@ void graphClass::printGraph(){
 }
 
 void* graphClass::getNode(int nId){
-    myNode* pointer;
+    myNode *pointer;
     
     stringstream s;
     s << nId;
@@ -62,41 +62,53 @@ void graphClass::addAdjacent(int nId1, int nId2, int cost){
     sourceNode->adjList.insert(sourceNode->adjList.end(), *newAdj);
 }
 
-void graphClass::shortestPath(int s){
-    list<myNode*>::iterator iterator;
-    for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        if(iterator->id == s){
-            iterator->known = true;
-        }
-    }
+void graphClass::shortestPath(int nId){
+    myNode *node;
+    stringstream s;
+    s << nId;
+    string strId = s.str();
+    node = hashish->getPointer(strId);
+    
+    node->known = true;
+    node->distance = 0;
+    updateAdjacents(nId);
+    
+    while(shortestUnknown());
+    printGraph();
 }
 
 int graphClass::shortestUnknown(){
-    list<myNode>::iterator iterator;
+    list<myNode*>::iterator iterator;
     myNode *node;
     int shortest = 1000;
     for (iterator = nodes.begin(); iterator != nodes.end(); ++iterator) {
-        if(iterator->known == false){
-            if(iterator->distance < shortest){
-                shortest = iterator->distance;
-                *node = (*iterator);
+        if((*iterator)->known == false){
+            if((*iterator)->distance < shortest){
+                shortest = (*iterator)->distance;
+                node = (*iterator);
             }
         }
     }
     if(!node) return false;
     else {
         node->known = true;
-        graphClass::updateAdjacents(node);
+        graphClass::updateAdjacents(node->id);
         return true;
     }
 }
 
-void graphClass::updateAdjacents(){
-    /*list<adjacent>::iterator iterator;
+void graphClass::updateAdjacents(int nId){
+    myNode *node;
+    stringstream s;
+    s << nId;
+    string strId = s.str();
+    node = hashish->getPointer(strId);
+    
+    list<adjacent>::iterator iterator;
     for (iterator = node->adjList.begin(); iterator != node->adjList.end(); ++iterator) {
-        if((iterator->cost + node->distance)<(iterator->node.distance))
-            iterator->node.distance = iterator->cost + node->distance;
-    }*/
+        if((iterator->cost + node->distance)< (iterator->node->distance))
+            iterator->node->distance = iterator->cost + node->distance;
+    }
 }
 
 

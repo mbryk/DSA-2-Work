@@ -19,7 +19,7 @@ public:
     void addAdjacent(int nId, int nId2, int cost);
     void shortestPath(int startingVertex);
     int shortestUnknown();
-    void updateAdjacents();
+    void updateAdjacents(int nId);
 
 private:
     class adjacent;
