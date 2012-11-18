@@ -32,7 +32,7 @@ void loadGraph(string GraphFile, graphClass &graph){
     input.open(GraphFile.c_str());
     while(!input.eof()){
         input>>vertex>>vertex2>>cost;
-        graph.addNode(vId(vertex), vId(vertex2), cost);
+        graph.addAdjacent(vId(vertex), vId(vertex2), cost);
     }
 }
 int main(int argc, char** argv) {

@@ -9,33 +9,37 @@
 #define	GRAPH_H
 #include <list>
 #include "heap.h"
+#include "hash.h"
 
 class graphClass {
 public:
     graphClass();
     void printGraph();
-    void addNode(int nId, int nId2, int cost);
+    void *getNode(int nId);
+    void addAdjacent(int nId, int nId2, int cost);
     void shortestPath(int startingVertex);
     int shortestUnknown();
-    void updateAdjacents(const node &node);
+    void updateAdjacents();
 
 private:
-    class adjacent{
-    public:
-        int adjId;
-        int cost;
-        node *node;
-    };
-    class node {
+    class adjacent;
+    class myNode {
     public:
         int id;
         bool known;
         int distance;
         std::list<adjacent> adjList;
     };
+    class adjacent{
+    public:
+        int adjId;
+        int cost;
+        myNode* node;
+    };
     
-    std::list<*node> nodes;
+    std::list<myNode*> nodes;
     heap *graphHeap;
+    hashTable *hashish;
        
 };
 
