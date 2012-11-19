@@ -7,9 +7,9 @@
  * Created on October 10, 2012, 8:08 AM
  */
 
-#include "heap.h"
-#include "hash.h"
 #include <iostream>
+#include "heap.h"
+
 using namespace std;
 
 heap::heap(int capacity){
@@ -132,6 +132,3 @@ int heap::getPos(node *pn){
     int pos = pn - &data[0];
     return pos;
 }
-
-
-

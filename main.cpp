@@ -1,6 +1,8 @@
 /* 
  * File:   main.cpp
- * Author: mark
+ * Author: Mark Bryk
+ * ECE 165
+ * HW #3
  *
  * Created on November 9, 2012, 1:59 PM
  */
@@ -18,23 +20,31 @@ void loadGraph(string GraphFile, graphClass &graph){
     int cost;
     
     input.open(GraphFile.c_str());
-    while(!input.eof()){
-        input>>vertex>>vertex2>>cost;
-        graph.addAdjacent(vertex, vertex2, cost);
+    if(input.is_open()){
+        while(!input.eof()){
+            input>>vertex>>vertex2>>cost;
+            graph.addAdjacent(vertex, vertex2, cost);
+        }
+    } else{
+        cerr<< "Error while opening " << GraphFile << endl;
+        exit(1);
     }
 }
 
 int main(int argc, char** argv) {
-    graphClass graph;
-    string GraphFile, OutputFile;
-    string StartingVertex;
+    graphClass graph(100);
+    string GraphFile, OutputFile, StartingVertex;
+    bool valid = false;
     
     cout<<"Enter name of graph file: ";
     cin>>GraphFile;
     loadGraph(GraphFile, graph);
     
-    cout<<"Enter a valid vertex id for the starting vertex: ";
-    cin>>StartingVertex;
+    while(!valid){
+        cout<<"Enter a valid vertex id for the starting vertex: ";
+        cin>>StartingVertex;
+        valid = graph.contains(StartingVertex);
+    }
     
     clock_t t1 = clock();
     graph.shortestPath(StartingVertex);
@@ -49,4 +59,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
