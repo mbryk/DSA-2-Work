@@ -1,5 +1,16 @@
+/* 
+ * File:   merge.cpp
+ * Author: Mark Bryk
+ * ECE 165
+ * HW #4
+ *
+ * Created on November 28, 2012, 1:45 PM
+ */
+
 #include <cstdlib>
 #include <iostream>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -7,8 +18,18 @@ using namespace std;
  * 
  */
 string s, print;
-int dynamic[1000][1000];
+int dynamic[1001][1001];
+ofstream output;
 
+void printMatrix(int n, int m){
+    for(int i = 0; i<=n; i++){
+        for(int j = 0; j<=m; j++){
+            cout<<dynamic[i][j]<<"  ";
+        }
+        cout<<endl;
+    }
+    
+}
 bool check(int d, char x){
     string local = s;
     int sub = s.size()-d;
@@ -21,27 +42,26 @@ bool check(int d, char x){
 //Arrays are passed by default by reference. So I don't believe this is a waste of space.
 bool printMerge(int i, int j){
     int d = dynamic[i][j];
-    int sub = s.size()-d;
+    int sub = s.size()-d-1;
     if(i==0 && j==0) {
-        cout<<s;
+        output<<s<<endl;
         return 1;
     }
-    if((i!=0)&&(dynamic[i-1][j]==d+1)){
-        s[sub] = (char) toupper(s[sub]);
-        printMerge(i-1, j);
-    }
-    else if((j!=0) && (dynamic[i][j-1]==d+1)){
+    if((j!=0) && (dynamic[i][j-1]==d+1)){
         printMerge(i, j-1);
     }
-    else
-        return 0;
+    else if((i!=0)&&(dynamic[i-1][j]==d+1)){
+        s[sub] = (char) toupper(s[sub]);
+        printMerge(i-1, j);
+    }    
+    else{
+        cerr<<"Sorry. Something has gone wrong.";
+        exit(1);
+    }
 }
-
-int main(int argc, char** argv) {
-    int d1,d2;
-    bool found;
-    string x, y;
-    cin>>x>>y>>s;
+void merge(string x, string y, string s){
+    int d1, d2;
+    
     int n = x.size();
     int m = y.size();
     
@@ -69,16 +89,10 @@ int main(int argc, char** argv) {
             d1 = dynamic[i-1][j];
             d2 = dynamic[i][j-1];
             if(check(d1, x[i-1])){
-                found = true;
                 d1--;
             }
             if(check(d2, y[j-1])){
-                found = true;
                 d2--;
-            }
-            if(!found){
-                cout<<"*** NOT A MERGE ***";
-                exit(1);
             }
             if(d1<d2)
                 dynamic[i][j] = d1;
@@ -86,9 +100,36 @@ int main(int argc, char** argv) {
                 dynamic[i][j] = d2;
         }
     }
+    //printMatrix(n,m);
     if(dynamic[n][m]==0) 
         printMerge(n, m);
-    else cout<<"*** NOT A MERGE ***";
+    else output<<"*** NOT A MERGE ***";
+}
+
+int main(int argc, char** argv) {
+    string InputFile, OutputFile, x, y;
+
+    cout<<"Enter name of input file: ";
+    cin>>InputFile;
+    cout<<"Enter name of output file: ";
+    cin>>OutputFile;
+
+    ifstream input;
+    input.open(InputFile.c_str());
+    if(!input.is_open()){
+        cerr<< "Error while opening " << InputFile << endl;
+        exit(1);
+    }
     
+    output.open(OutputFile.c_str());
+    if(!output.is_open()){
+        cerr<< "Error while opening " << OutputFile << endl;
+        exit(1);
+    }
+
+    while(!input.eof()){
+        input>>x>>y>>s;
+        merge(x, y, s);
+    }
     return 0;
 }
