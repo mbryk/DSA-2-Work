@@ -23,17 +23,22 @@
         <in>spellcheck.cpp</in>
       </df>
       <df name="hw2">
+        <in>hash.cpp</in>
+        <in>hash.h</in>
+        <in>heap.cpp</in>
+        <in>heap.h</in>
         <in>useHeap.cpp</in>
       </df>
-      <in>adjikstras help.cpp</in>
-      <in>graph.cpp</in>
-      <in>graph.h</in>
-      <in>hash.cpp</in>
-      <in>hash.h</in>
-      <in>heap.cpp</in>
-      <in>heap.h</in>
+      <df name="hw3">
+        <in>graph.cpp</in>
+        <in>graph.h</in>
+        <in>hash.cpp</in>
+        <in>hash.h</in>
+        <in>heap.cpp</in>
+        <in>heap.h</in>
+        <in>main.cpp</in>
+      </df>
       <in>huffman.c</in>
-      <in>main.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
