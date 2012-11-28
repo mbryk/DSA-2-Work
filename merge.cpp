@@ -14,22 +14,10 @@
 
 using namespace std;
 
-/*
- * 
- */
 string s, print;
 int dynamic[1001][1001];
 ofstream output;
 
-void printMatrix(int n, int m){
-    for(int i = 0; i<=n; i++){
-        for(int j = 0; j<=m; j++){
-            cout<<dynamic[i][j]<<"  ";
-        }
-        cout<<endl;
-    }
-    
-}
 bool check(int d, char x){
     string local = s;
     int sub = s.size()-d;
@@ -38,14 +26,12 @@ bool check(int d, char x){
     if(x==local[0]) return true;
     else return false;
 }
-
-//Arrays are passed by default by reference. So I don't believe this is a waste of space.
 bool printMerge(int i, int j){
     int d = dynamic[i][j];
     int sub = s.size()-d-1;
     if(i==0 && j==0) {
         output<<s<<endl;
-        return 1;
+        return true;
     }
     if((j!=0) && (dynamic[i][j-1]==d+1)){
         printMerge(i, j-1);
@@ -100,10 +86,10 @@ void merge(string x, string y, string s){
                 dynamic[i][j] = d2;
         }
     }
-    //printMatrix(n,m);
     if(dynamic[n][m]==0) 
         printMerge(n, m);
-    else output<<"*** NOT A MERGE ***";
+    else 
+        output<<"*** NOT A MERGE ***"<<endl;
 }
 
 int main(int argc, char** argv) {
