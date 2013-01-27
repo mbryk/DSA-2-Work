@@ -45,12 +45,19 @@ bool printMerge(int i, int j){
         exit(1);
     }
 }
-void merge(string x, string y, string s){
+bool merge(string x, string y, string s){
     int d1, d2;
     
     int n = x.size();
     int m = y.size();
+    if(s.size() != (n+m)){
+        output<<"*** NOT A MERGE ***"<<endl;
+        return 1;
+    }
+    //initialize bottom-right, just in case memory messes up a case
+    dynamic[n][m] = -1;
     
+    //initialize top-left with merge size. step through to reach bottom-right with 0.
     dynamic[0][0]= s.size();
     
     //initialize first column
@@ -90,6 +97,7 @@ void merge(string x, string y, string s){
         printMerge(n, m);
     else 
         output<<"*** NOT A MERGE ***"<<endl;
+    return 1;
 }
 
 int main(int argc, char** argv) {
@@ -114,8 +122,10 @@ int main(int argc, char** argv) {
     }
 
     while(!input.eof()){
+        x = y = s ="";
         input>>x>>y>>s;
-        merge(x, y, s);
+        if(!x.empty())
+            merge(x, y, s);
     }
     return 0;
 }

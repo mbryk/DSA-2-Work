@@ -38,7 +38,7 @@
         <in>heap.h</in>
         <in>main.cpp</in>
       </df>
-      <in>huffman.c</in>
+      <in>merge.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
